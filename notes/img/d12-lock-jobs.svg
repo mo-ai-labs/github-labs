@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1340" height="260" viewBox="0 0 1340 260" font-family="Segoe UI, Helvetica, sans-serif"><rect width="100%" height="100%" fill="#fff"/><defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1e1e1e"/></marker></defs>
+<text x="20" y="35" font-size="20" font-weight="600">One .lock.yml = separate jobs, because Actions permissions are per-job</text>
+<rect x="20" y="70" width="180" height="90" rx="10" fill="#e9ecef" stroke="#1e1e1e" stroke-width="2"/>
+<text x="110" y="111" font-size="14" text-anchor="middle" font-weight="600">pre_activation</text>
+<text x="110" y="129" font-size="14" text-anchor="middle">role checks, skip-if</text>
+<text x="110" y="184" font-size="14" text-anchor="middle" fill="#495057" font-weight="600"></text>
+<line x1="204" y1="115" x2="236" y2="115" stroke="#1e1e1e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="240" y="70" width="180" height="90" rx="10" fill="#e9ecef" stroke="#1e1e1e" stroke-width="2"/>
+<text x="330" y="102" font-size="14" text-anchor="middle" font-weight="600">activation</text>
+<text x="330" y="120" font-size="14" text-anchor="middle">sanitize event,</text>
+<text x="330" y="138" font-size="14" text-anchor="middle">lock freshness</text>
+<text x="330" y="184" font-size="14" text-anchor="middle" fill="#495057" font-weight="600"></text>
+<line x1="424" y1="115" x2="456" y2="115" stroke="#1e1e1e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="460" y="70" width="180" height="90" rx="10" fill="#a5d8ff" stroke="#1e1e1e" stroke-width="2"/>
+<text x="550" y="102" font-size="14" text-anchor="middle" font-weight="600">agent</text>
+<text x="550" y="120" font-size="14" text-anchor="middle">AI engine + tools</text>
+<text x="550" y="138" font-size="14" text-anchor="middle">→ output artifact</text>
+<text x="550" y="184" font-size="14" text-anchor="middle" fill="#1971c2" font-weight="600">READ-ONLY</text>
+<line x1="644" y1="115" x2="676" y2="115" stroke="#1e1e1e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="680" y="70" width="180" height="90" rx="10" fill="#ffec99" stroke="#1e1e1e" stroke-width="2"/>
+<text x="770" y="102" font-size="14" text-anchor="middle" font-weight="600">detection</text>
+<text x="770" y="120" font-size="14" text-anchor="middle">threat-scan</text>
+<text x="770" y="138" font-size="14" text-anchor="middle">proposed output</text>
+<text x="770" y="184" font-size="14" text-anchor="middle" fill="#495057" font-weight="600"></text>
+<line x1="864" y1="115" x2="896" y2="115" stroke="#1e1e1e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="900" y="70" width="180" height="90" rx="10" fill="#b2f2bb" stroke="#1e1e1e" stroke-width="2"/>
+<text x="990" y="102" font-size="14" text-anchor="middle" font-weight="600">safe output jobs</text>
+<text x="990" y="120" font-size="14" text-anchor="middle">add_comment,</text>
+<text x="990" y="138" font-size="14" text-anchor="middle">add_labels …</text>
+<text x="990" y="184" font-size="14" text-anchor="middle" fill="#c92a2a" font-weight="600">WRITE (scoped)</text>
+<line x1="1084" y1="115" x2="1116" y2="115" stroke="#1e1e1e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="1120" y="70" width="180" height="90" rx="10" fill="#e9ecef" stroke="#1e1e1e" stroke-width="2"/>
+<text x="1210" y="102" font-size="14" text-anchor="middle" font-weight="600">conclusion</text>
+<text x="1210" y="120" font-size="14" text-anchor="middle">summary,</text>
+<text x="1210" y="138" font-size="14" text-anchor="middle">runs even on failure</text>
+<text x="1210" y="184" font-size="14" text-anchor="middle" fill="#495057" font-weight="600"></text>
+<text x="20" y="225" font-size="15" font-style="italic" fill="#495057">agent hands off only an artifact (agent_output.json); the write jobs download it and call the GitHub API</text>
+</svg>
