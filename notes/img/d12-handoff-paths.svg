@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="380" viewBox="0 0 860 380" font-family="Segoe UI, Helvetica, sans-serif"><rect width="860" height="380" fill="#ffffff"/><defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1e1e1e"/></marker></defs>
+<text x="20" y="60" font-size="20" font-weight="600" fill="#1e1e1e">A · issue handoff</text>
+<rect x="20" y="80" width="210" height="80" rx="10" fill="#ffc9c9" stroke="#1e1e1e" stroke-width="2"/>
+<text x="125.0" y="115.0" font-size="15" text-anchor="middle" fill="#1e1e1e">Nightly run #N</text>
+<text x="125.0" y="135.0" font-size="15" text-anchor="middle" fill="#1e1e1e">(fails)</text>
+<line x1="235" y1="120.0" x2="305" y2="120.0" stroke="#1e1e1e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="310" y="80" width="210" height="80" rx="10" fill="#a5d8ff" stroke="#1e1e1e" stroke-width="2"/>
+<text x="415.0" y="105.0" font-size="15" text-anchor="middle" fill="#1e1e1e">Issue</text>
+<text x="415.0" y="125.0" font-size="15" text-anchor="middle" fill="#1e1e1e">run URL + log tail</text>
+<text x="415.0" y="145.0" font-size="15" text-anchor="middle" fill="#1e1e1e">assignee: Copilot</text>
+<line x1="525" y1="120.0" x2="595" y2="120.0" stroke="#1e1e1e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="600" y="80" width="210" height="80" rx="10" fill="#b2f2bb" stroke="#1e1e1e" stroke-width="2"/>
+<text x="705.0" y="115.0" font-size="15" text-anchor="middle" fill="#1e1e1e">Copilot PR</text>
+<text x="705.0" y="135.0" font-size="15" text-anchor="middle" fill="#1e1e1e">"Fixes #issue"</text>
+<text x="20" y="190" font-size="16" font-style="italic" fill="#495057">every link is a stored GitHub object</text>
+<text x="20" y="240" font-size="20" font-weight="600" fill="#1e1e1e">B · gh agent-task create</text>
+<rect x="20" y="260" width="210" height="80" rx="10" fill="#ffc9c9" stroke="#1e1e1e" stroke-width="2"/>
+<text x="125.0" y="295.0" font-size="15" text-anchor="middle" fill="#1e1e1e">Nightly run #N</text>
+<text x="125.0" y="315.0" font-size="15" text-anchor="middle" fill="#1e1e1e">(fails)</text>
+<line x1="235" y1="300.0" x2="305" y2="300.0" stroke="#1e1e1e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="310" y="260" width="210" height="80" rx="10" fill="#ffec99" stroke="#1e1e1e" stroke-width="2"/>
+<text x="415.0" y="295.0" font-size="15" text-anchor="middle" fill="#1e1e1e">Agent session</text>
+<text x="415.0" y="315.0" font-size="15" text-anchor="middle" fill="#1e1e1e">(prompt only)</text>
+<line x1="525" y1="300.0" x2="595" y2="300.0" stroke="#1e1e1e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="600" y="260" width="210" height="80" rx="10" fill="#b2f2bb" stroke="#1e1e1e" stroke-width="2"/>
+<text x="705.0" y="305.0" font-size="15" text-anchor="middle" fill="#1e1e1e">Copilot PR</text>
+<text x="20" y="370" font-size="16" font-style="italic" fill="#495057">no issue: the run link lives only in prompt text</text>
+</svg>
