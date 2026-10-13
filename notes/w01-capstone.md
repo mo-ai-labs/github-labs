@@ -222,7 +222,7 @@ Alternatives considered: a workflow that writes the plan PR (removes the manual 
 ## Done when
 
 - [x] **3 merged PRs**, each linking its approved plan
-- [x] `notes/capstone-1.md` has timings per stage and every intervention with its reason
+- [x] `notes/w01-capstone.md` has timings per stage and every intervention with its reason
 - [x] Learn module 2 (Designing Agent Architecture and SDLC Integration) finished
 
 ## Reflection
