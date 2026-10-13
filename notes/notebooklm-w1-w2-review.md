@@ -2,7 +2,7 @@
 
 > Covers plan Days 1–14 (Sep 28 → Oct 11): **Domain 1** (agent architecture & SDLC, 15–20%) and **Domain 2** (tools, MCP, execution environments, 20–25%). Exam: **Sun Oct 25**.
 > Built from `study-plans/docs/GH600_DAILY_PLAN.md`, the Mission Guides in `study-plans/assets/plans/GH-600/week01–02`, and my notes in `github-labs/notes/`.
-> Status: Days 1–12 done. **Day 13 (Capstone 2) is in progress** and **Day 14 (Week 2 review) isn't done yet**; their topics are included anyway.
+> Status (updated Oct 13): Days 1–13 done. **Day 14 (Week 2 review) isn't done yet**; its topics are included anyway.
 
 ---
 
@@ -284,7 +284,7 @@
 - `GITHUB_TOKEN` actions don't trigger new workflow runs (loop protection); PATs/App tokens can → design against recursion.
 - My lesson: put the run link in more than one durable place; deleting the issue breaks the chain otherwise.
 
-### Day 13 — Capstone 2: safe execution *(in progress)*
+### Day 13 — Capstone 2: safe execution
 **Focus sections**
 - [Hooks — creating in a repo](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/use-hooks#creating-a-hook-in-a-repository-on-github) · [Troubleshooting](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/use-hooks#troubleshooting)
 - [Hooks reference — preToolUse decision control](https://docs.github.com/en/copilot/reference/hooks-reference#pretooluse-decision-control) · [Exit codes](https://docs.github.com/en/copilot/reference/hooks-reference#exit-codes-for-command-hooks) · [Tool names](https://docs.github.com/en/copilot/reference/hooks-reference#tool-names-for-hook-matching) · [Cloud agent environment](https://docs.github.com/en/copilot/reference/hooks-reference#cloud-agent-execution-environment) · [Hooks locations](https://docs.github.com/en/copilot/reference/hooks-reference#hooks-locations)
@@ -296,9 +296,14 @@
 - `preToolUse` returns `permissionDecision` `allow`/`deny`/`ask`. **Crash / non-zero exit = deny (fail-closed); timeout = fail-open; HTTP hooks = fail-open.** Any `deny` among several hooks wins. Don't print `allow` if you have no opinion.
 - Exit `2`: deny on `preToolUse`/`permissionRequest` (even if stdout says allow); recovery guidance on `postToolUseFailure`; a warning elsewhere. Only **gate** events can block.
 - Guard for writes under `infra/` must match **`create|edit|bash`**; `matcher` filters before the script runs. Back it with a ruleset/CODEOWNERS.
-- Cloud agent: only the `bash` field runs; workdir `/workspace`; filesystem **ephemeral** (hook-written files vanish); permissions pre-granted. Default hook timeout 30 s; single-line JSON output.
+- Cloud agent: only the `bash` field runs; workdir `/workspace`; filesystem **ephemeral** (hook-written files are gone after the job — not committed, not an artifact; the **session log** is the record); permissions pre-granted, so a hook's `ask` = **deny**. `notification` doesn't fire, `permissionRequest` has no effect, `preCompact` only `auto`. Default hook timeout 30 s; single-line JSON output.
+- Copilot CLI loads hooks from policy files, repo `.github/hooks/`, `~/.copilot/hooks/`, settings and plugins (all run); the cloud agent loads **only** repo `.github/hooks/*.json`.
+- To keep a tool-call log, run the CLI in your own workflow and upload it with `actions/upload-artifact` (`if: always()`), or use an `http` hook.
+- Safe-execution patterns (Learn unit 5): error handling (fail fast) · retries (transient only, backoff) · rollbacks (branch isolation + PR review, revert after merge) · escalation (notify from workflow steps) · traceability. Summary: *resilient, controlled, auditable, human-governed*.
+- `errorOccurred` is an observer (fields `error`, `errorContext`, `recoverable`): it can report, never block.
 - Rollback = branch isolation + PR review; after merge, **Revert** opens a new PR.
-- Copilot CLI in CI: `copilot -p "..." -s --allow-tool=... --no-ask-user`, auth `COPILOT_GITHUB_TOKEN` (PAT).
+- Copilot CLI in CI: `copilot -p "..." -s --allow-tool=... --no-ask-user` (`--share=./audit.md` saves the transcript), auth `COPILOT_GITHUB_TOKEN` (PAT).
+- Where Learn module 3 disagrees with the docs, **the docs win**: install `npm install -g @github/copilot` and run `copilot -p` (not `npx @github/copilot-cli`); `COPILOT_GITHUB_TOKEN` comes from a PAT, not `GITHUB_TOKEN`; `applyTo` belongs to instructions files, not agent profiles.
 
 ### Day 14 — Week 2 review: know cold *(not done yet)*
 - Agent frontmatter + tool aliases
@@ -320,14 +325,14 @@ From `github-labs/notes/` (my bets, evidence and corrections). Regenerate the bu
 | `d03-agents.md` | 3 — planner / implementer |
 | `d04-plan-gate.md`, `plan-checklist.md` | 4 — plan gate |
 | `d05-controls.md` | 5 — built-in controls with evidence |
-| `capstone-1.md` | 6 — capstone timings and interventions |
-| `week-01-quiz.md` | 7 — 20 Domain 1 questions + answer key |
+| `w01-capstone.md` | 6 — capstone timings and interventions |
+| `w01-quiz.md` | 7 — 20 Domain 1 questions + answer key |
 | `d08-tools.md` | 8 — tool belts |
 | `d09-mcp.md` | 9 — MCP |
 | `d10-mcp-governance.md` | 10 — registries & allowlists |
 | `d11-env.md` | 11 — environment failures |
 | `d12-ci.md` | 12 — CI-triggered agents |
-| `capstone-2.md` | 13 — in progress |
+| `w02-capstone.md` | 13 — hooks, retries, escalation, rollback |
 | **`gap-log.md`** | **all misses — most valuable source** |
 
 Optional: diagrams in `notes/img/*.svg` (convert to PNG/PDF first if NotebookLM rejects SVG).
@@ -354,13 +359,14 @@ Optional: diagrams in `notes/img/*.svg` (convert to PNG/PDF first if NotebookLM 
 16. **Firewall scope**: only the Bash tool's processes, not MCP servers or setup steps.
 17. **Domain allowlist entry**: itself + subdomains only.
 18. **Hook failure modes**: timeout = fail-open; exit 2 on `preToolUse` = deny; only gate events can block; guard matcher `create|edit|bash`.
+19. **Cloud agent hook output**: a file a hook writes is **gone** after the session (not committed, not an artifact); the session log is the record.
 
 ---
 
 ## 6. Prompts to use in NotebookLM
 
 - *"Using only the GitHub Docs and Microsoft Learn sources, quiz me with 15 scenario-style multiple-choice questions on Domain 2 (tools, MCP, execution environment). Cite the source for each answer."*
-- *"Quiz me on the 18 weak spots in section 5 of the review pack. Make the wrong options the mistakes I actually made in gap-log.md."*
+- *"Quiz me on the 19 weak spots in section 5 of the review pack. Make the wrong options the mistakes I actually made in gap-log.md."*
 - *"Explain the difference between where MCP servers are governed for developer IDEs/CLI versus the Copilot cloud agent. Build a table: surface, where configured, who can set it, what enforces it."*
 - *"Compare every way to limit what an agent can do: profile `tools:`, CLI flags, MCP tool allowlists, firewall, hooks, rulesets, CODEOWNERS, required checks. For each: what it blocks, where it's set, and how it fails."*
 - *"List every fail-open vs fail-closed behavior across hooks, setup steps and the firewall."*

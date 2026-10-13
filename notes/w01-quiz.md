@@ -193,7 +193,7 @@ Answered closed-book (multiple choice), then checked against the docs. **2/3.**
 2. **Custom instructions vs custom agents vs skills** — ✓ Instructions = **always-on context** · custom agents = **specialized Copilot** with its own prompt, tools, model, MCP servers in `.github/agents/*.agent.md` · skills = **folders** of instructions, scripts and resources loaded **only when relevant** (project: `.github/skills`, `.claude/skills`, `.agents/skills`; personal: `~/.copilot/skills`, `~/.agents/skills`)
    - Check: [About agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills#about-agent-skills)
 3. **Human checkpoints without approving every step** — ✓ **Gate by risk, not by step**: plan-first review only for high-risk paths · required checks instead of manual approvals for low risk · CODEOWNERS routes `infra/` + workflows · environments pause only critical jobs · steer (session prompt box / `@copilot`) instead of stopping
-   - Check: Day 4 [`plan-checklist.md`](plan-checklist.md) · Day 6 [`capstone-1.md`](capstone-1.md) · [Learn — autonomy must be designed](https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/6-reliable-workflows#autonomy-must-be-designed-not-assumed)
+   - Check: Day 4 [`plan-checklist.md`](plan-checklist.md) · Day 6 [`w01-capstone.md`](w01-capstone.md) · [Learn — autonomy must be designed](https://learn.microsoft.com/en-us/training/modules/design-agent-architecture-integration/6-reliable-workflows#autonomy-must-be-designed-not-assumed)
 
 ## Domain 1 ratings (Mission 5)
 
@@ -201,7 +201,7 @@ Mirror of the **GH-600 objectives** issue. **Green** = configured it this week +
 
 | # | Bullet | Rating | Evidence |
 |---|---|---|---|
-| 1.1 | Identify steps for agents to perform | 🟢 green | [`d01-artifacts.md`](d01-artifacts.md) · [`capstone-1.md`](capstone-1.md) |
+| 1.1 | Identify steps for agents to perform | 🟢 green | [`d01-artifacts.md`](d01-artifacts.md) · [`w01-capstone.md`](w01-capstone.md) |
 | 1.2 | Identify and mitigate common anti-patterns | 🟢 green | [`d02-antipatterns.md`](d02-antipatterns.md) |
 | 1.3 | Inputs, outputs, success criteria | 🟢 green (Q6 ✗ → re-quiz 2/2) | [`d02-antipatterns.md`](d02-antipatterns.md) (template fields) |
 | 2.1 | Planning distinct from execution | 🟢 green | [`d03-agents.md`](d03-agents.md) |
@@ -209,8 +209,8 @@ Mirror of the **GH-600 objectives** issue. **Green** = configured it this week +
 | 2.3 | Validate agent plans | 🟢 green (Q11 ✗ → re-quiz 2/2) | [`plan-checklist.md`](plan-checklist.md) |
 | 2.4 | No action until checked + approved | 🟢 green | [`d04-plan-gate.md`](d04-plan-gate.md) |
 | 3.1 | Degree of autonomy + guardrails | 🟢 green (`d05-controls.md` restored) | [`d05-controls.md`](d05-controls.md) |
-| 3.2 | Inspectable artifacts | 🟢 green (Q17 ✗ → re-quiz 2/2) | [`d01-artifacts.md`](d01-artifacts.md) · [`capstone-1.md`](capstone-1.md) |
-| 3.3 | Human intervention without slowing delivery | 🟢 green | [`capstone-1.md`](capstone-1.md) |
+| 3.2 | Inspectable artifacts | 🟢 green (Q17 ✗ → re-quiz 2/2) | [`d01-artifacts.md`](d01-artifacts.md) · [`w01-capstone.md`](w01-capstone.md) |
+| 3.3 | Human intervention without slowing delivery | 🟢 green | [`w01-capstone.md`](w01-capstone.md) |
 
 ## Amber re-quiz
 
