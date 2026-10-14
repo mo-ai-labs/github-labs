@@ -3,7 +3,16 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from app.models import Alert, AlertStatus, AssignIn, CloseAlertIn, Note, NoteIn
+from app.models import (
+    Alert,
+    AlertEventType,
+    AlertHistoryEvent,
+    AlertStatus,
+    AssignIn,
+    CloseAlertIn,
+    Note,
+    NoteIn,
+)
 from app.store import Store, get_store, new_id
 
 router = APIRouter(prefix="/alerts", tags=["alerts"])
@@ -54,12 +63,22 @@ def list_alert_notes(alert_id: str, store: StoreDep) -> list[Note]:
         return sorted(alert.notes, key=lambda note: note.created_at, reverse=True)
 
 
+@router.get("/{alert_id}/history", response_model=list[AlertHistoryEvent])
+def get_alert_history(alert_id: str, store: StoreDep) -> list[AlertHistoryEvent]:
+    with store.lock:
+        _get_alert(store, alert_id)
+        return sorted(store.alert_history.get(alert_id, []), key=lambda event: event.timestamp)
+
+
 @router.post("/{alert_id}/assign", response_model=Alert)
 def assign_alert(alert_id: str, body: AssignIn, store: StoreDep) -> Alert:
     with store.lock:
         alert = _get_alert(store, alert_id)
         _require_open(alert)
         alert.assignee = body.assignee
+        store.alert_history[alert_id].append(
+            AlertHistoryEvent(type=AlertEventType.ASSIGNED, timestamp=datetime.now(UTC))
+        )
     return alert
 
 
@@ -69,6 +88,9 @@ def add_note(alert_id: str, body: NoteIn, store: StoreDep) -> Note:
         alert = _get_alert(store, alert_id)
         note = Note(id=new_id("note"), author=body.author, text=body.text, created_at=datetime.now(UTC))
         alert.notes.append(note)
+        store.alert_history[alert_id].append(
+            AlertHistoryEvent(type=AlertEventType.NOTE_ADDED, actor=body.author, timestamp=note.created_at)
+        )
     return note
 
 
@@ -81,4 +103,7 @@ def close_alert(alert_id: str, body: CloseAlertIn, store: StoreDep) -> Alert:
         alert.disposition = body.disposition
         alert.close_reason = body.reason
         alert.closed_at = datetime.now(UTC)
+        store.alert_history[alert_id].append(
+            AlertHistoryEvent(type=AlertEventType.CLOSED, timestamp=alert.closed_at)
+        )
     return alert

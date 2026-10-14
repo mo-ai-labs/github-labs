@@ -116,6 +116,27 @@ def test_get_unknown_alert_returns_404(client):
     assert client.get("/alerts/alt_missing").status_code == 404
 
 
+def test_get_alert_history_returns_all_events_chronologically(client, alert_id):
+    client.post(f"/alerts/{alert_id}/assign", json={"assignee": "analyst-1"})
+    client.post(f"/alerts/{alert_id}/notes", json={"author": "analyst-1", "text": "Reviewing"})
+    client.post(f"/alerts/{alert_id}/close", json=CLOSE_BODY)
+
+    response = client.get(f"/alerts/{alert_id}/history")
+
+    assert response.status_code == 200
+    events = response.json()
+    assert [event["type"] for event in events] == ["created", "assigned", "note_added", "closed"]
+    assert [event["actor"] for event in events] == [None, None, "analyst-1", None]
+    assert all(event["timestamp"] for event in events)
+    assert [event["timestamp"] for event in events] == sorted(event["timestamp"] for event in events)
+
+
+def test_get_alert_history_returns_404_for_unknown_alert(client):
+    response = client.get("/alerts/alt_missing/history")
+
+    assert response.status_code == 404
+
+
 def test_assign_alert(client, alert_id):
     response = client.post(f"/alerts/{alert_id}/assign", json={"assignee": "analyst-1"})
     assert response.status_code == 200
