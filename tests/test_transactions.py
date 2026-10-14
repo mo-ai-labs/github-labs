@@ -196,6 +196,37 @@ def test_screen_bulk_rejects_invalid_item_without_storing_results(
     assert store.alerts == alerts_before
 
 
+def test_screen_rejects_duplicate_reference(client: TestClient, store: Store) -> None:
+    first = client.post("/transactions/screen", json=make_txn(reference="TXN-DUP"))
+    assert first.status_code == 201
+    second = client.post("/transactions/screen", json=make_txn(reference="TXN-DUP"))
+    assert second.status_code == 409
+    assert "TXN-DUP" in second.json()["detail"] or "already screened" in second.json()["detail"]
+    assert len(store.results) == 1
+
+
+def test_screen_bulk_rejects_reference_already_screened(client: TestClient, store: Store) -> None:
+    existing = client.post("/transactions/screen", json=make_txn(reference="TXN-DUP"))
+    assert existing.status_code == 201
+    transactions = [
+        make_txn(reference="TXN-BULK-1"),
+        make_txn(reference="TXN-DUP"),
+    ]
+    response = client.post("/transactions/screen/bulk", json={"transactions": transactions})
+    assert response.status_code == 409
+    assert len(store.results) == 1
+
+
+def test_screen_bulk_rejects_duplicate_reference_within_batch(client: TestClient, store: Store) -> None:
+    transactions = [
+        make_txn(reference="TXN-DUP"),
+        make_txn(reference="TXN-DUP"),
+    ]
+    response = client.post("/transactions/screen/bulk", json={"transactions": transactions})
+    assert response.status_code == 409
+    assert store.results == {}
+
+
 def test_get_screening_result_for_each_bulk_transaction(client: TestClient) -> None:
     transactions = [
         make_txn(reference="TXN-BULK-1"),

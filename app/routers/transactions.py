@@ -15,6 +15,8 @@ StoreDep = Annotated[Store, Depends(get_store)]
 def screen_transaction(txn: TransactionIn, store: StoreDep) -> ScreeningResult:
     now = datetime.now(UTC)
     with store.lock:
+        if any(result.transaction.reference == txn.reference for result in store.results.values()):
+            raise HTTPException(status.HTTP_409_CONFLICT, "Transaction with this reference was already screened")
         decision, risk_score, hits = screen(txn, list(store.watchlist.values()))
         txn_id = new_id("txn")
         alert_id = None
@@ -46,6 +48,16 @@ def screen_transaction(txn: TransactionIn, store: StoreDep) -> ScreeningResult:
 def screen_transactions(batch: BulkTransactionIn, store: StoreDep) -> list[ScreeningResult]:
     results: list[ScreeningResult] = []
     with store.lock:
+        existing_references = {result.transaction.reference for result in store.results.values()}
+        seen_references: set[str] = set()
+        for txn in batch.transactions:
+            if txn.reference in existing_references or txn.reference in seen_references:
+                raise HTTPException(
+                    status.HTTP_409_CONFLICT,
+                    f"Transaction with reference '{txn.reference}' was already screened",
+                )
+            seen_references.add(txn.reference)
+
         watchlist = list(store.watchlist.values())
         for txn in batch.transactions:
             now = datetime.now(UTC)
