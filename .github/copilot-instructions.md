@@ -22,5 +22,5 @@ A toy transaction-screening service: FastAPI, in-memory storage (`app/store.py`)
 
 - **Never create, modify or delete anything in `infra/`.** It is human-only.
 - Don't change `.github/workflows/` unless the issue explicitly asks for it.
-- Don't change `RULES` scores, `REVIEW_THRESHOLD`, `NAME_MATCH_THRESHOLD` or `LARGE_AMOUNT` in `app/screening.py` unless the issue explicitly asks for it. Those are compliance decisions.
+- Don't change `RULES` scores, `RISK_SCORE_REVIEW_THRESHOLD`, `NAME_MATCH_THRESHOLD` or `LARGE_AMOUNT` in `app/screening.py` unless the issue explicitly asks for it. Those are compliance decisions.
 - **Synthetic data only.** Never add real names, account numbers or customer data.

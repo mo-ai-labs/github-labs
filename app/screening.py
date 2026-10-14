@@ -7,7 +7,7 @@ from app.rules import (
     HIGH_RISK_COUNTRIES,
     LARGE_AMOUNT,
     NAME_MATCH_THRESHOLD,
-    REVIEW_THRESHOLD,
+    RISK_SCORE_REVIEW_THRESHOLD,
     ROUND_AMOUNT_STEP,
     RULES,
 )
@@ -54,5 +54,5 @@ def screen(txn: TransactionIn, watchlist: list[WatchlistEntry]) -> tuple[Decisio
         )
 
     risk_score = min(sum(hit.score for hit in hits), 100)
-    decision = Decision.REVIEW if risk_score >= REVIEW_THRESHOLD else Decision.CLEAR
+    decision = Decision.REVIEW if risk_score >= RISK_SCORE_REVIEW_THRESHOLD else Decision.CLEAR
     return decision, risk_score, hits
