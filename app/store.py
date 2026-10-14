@@ -3,7 +3,7 @@
 from threading import Lock
 from uuid import uuid4
 
-from app.models import Alert, ScreeningResult, WatchlistEntry
+from app.models import Alert, AlertHistoryEvent, ScreeningResult, WatchlistEntry
 
 # Obviously fictional names; see the "synthetic data only" rule in the README.
 SEED_WATCHLIST = [
@@ -23,6 +23,7 @@ class Store:
         self.lock = Lock()
         self.results: dict[str, ScreeningResult] = {}
         self.alerts: dict[str, Alert] = {}
+        self.alert_history: dict[str, list[AlertHistoryEvent]] = {}
         self.watchlist: dict[str, WatchlistEntry] = {}
         for name, list_name in SEED_WATCHLIST:
             entry = WatchlistEntry(id=new_id("wl"), name=name, list_name=list_name)

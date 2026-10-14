@@ -3,7 +3,16 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.models import Alert, AlertStatus, BulkTransactionIn, Decision, ScreeningResult, TransactionIn
+from app.models import (
+    Alert,
+    AlertEventType,
+    AlertHistoryEvent,
+    AlertStatus,
+    BulkTransactionIn,
+    Decision,
+    ScreeningResult,
+    TransactionIn,
+)
 from app.screening import screen
 from app.store import Store, get_store, new_id
 
@@ -28,6 +37,9 @@ def screen_transaction(txn: TransactionIn, store: StoreDep) -> ScreeningResult:
                 created_at=now,
             )
             store.alerts[alert.id] = alert
+            store.alert_history[alert.id] = [
+                AlertHistoryEvent(type=AlertEventType.CREATED, timestamp=now)
+            ]
             alert_id = alert.id
         result = ScreeningResult(
             transaction_id=txn_id,
@@ -62,6 +74,9 @@ def screen_transactions(batch: BulkTransactionIn, store: StoreDep) -> list[Scree
                     created_at=now,
                 )
                 store.alerts[alert.id] = alert
+                store.alert_history[alert.id] = [
+                    AlertHistoryEvent(type=AlertEventType.CREATED, timestamp=now)
+                ]
                 alert_id = alert.id
             result = ScreeningResult(
                 transaction_id=txn_id,

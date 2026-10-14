@@ -50,6 +50,19 @@ class Disposition(StrEnum):
     TRUE_POSITIVE = "true_positive"
 
 
+class AlertEventType(StrEnum):
+    CREATED = "created"
+    ASSIGNED = "assigned"
+    NOTE_ADDED = "note_added"
+    CLOSED = "closed"
+
+
+class AlertHistoryEvent(BaseModel):
+    type: AlertEventType
+    actor: str | None = None
+    timestamp: datetime
+
+
 class Note(BaseModel):
     id: str
     author: str
