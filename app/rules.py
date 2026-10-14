@@ -9,7 +9,7 @@ HIGH_RISK_COUNTRIES = {"XQ", "XR", "ZZ"}
 LARGE_AMOUNT = Decimal("7500")
 ROUND_AMOUNT_STEP = Decimal("1000")
 NAME_MATCH_THRESHOLD = 0.85
-REVIEW_THRESHOLD = 50
+RISK_SCORE_REVIEW_THRESHOLD = 50
 
 RULES = [
     Rule(id="WATCHLIST_NAME", description="Party name fuzzy-matches a watchlist entry", score=70),

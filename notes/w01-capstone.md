@@ -43,7 +43,7 @@ Intervention log (one line each, so the reasons don't get squeezed into the tabl
 |---|---|---|---|---|
 | 1 | #29 | Plan review | Added `test_screen_bulk_accepts_100_transactions` to *Tests to add* (commit on `plans/29`), with a PR comment citing §3 | Plan tested 101 → 422 but never that 100 is accepted: an off-by-one (`max_length=99`) would pass every planned test |
 | 2 | #27 | Planner run | Re-ran the planner unchanged (closed the WIP draft, unassigned + reassigned Copilot with `planner`, empty prompt) | Session failed after 1 m 1 s: "Failed to get a valid PR summary after 3 attempts", no plan in the log. Learn safe iteration: rerun once; same failure twice → escalate ([screenshot](img/d06-i2-planner-error.png)) |
-| 3 | #27 | Plan review | Commit `410ad41` on `plans/27`: test pins **all six** moved definitions; *Risks* names the `watchlist.py` caller and states "no effect on decisions" + proof; rollback records the unmet second-reviewer rule | §3 + §4 Escalate: plan pinned only `RULES` + `REVIEW_THRESHOLD`; existing tests use 7600.10 / 8000 / 9000, so a silently changed `LARGE_AMOUNT` would pass every test |
+| 3 | #27 | Plan review | Commit `410ad41` on `plans/27`: test pins **all six** moved definitions; *Risks* names the `watchlist.py` caller and states "no effect on decisions" + proof; rollback records the unmet second-reviewer rule | §3 + §4 Escalate: plan pinned only `RULES` + `RISK_SCORE_REVIEW_THRESHOLD`; existing tests use 7600.10 / 8000 / 9000, so a silently changed `LARGE_AMOUNT` would pass every test |
 | 4 | #28 | Plan review | Commit on `plans/28`: dropped 4 planned tests that duplicate existing ones (listed as "already covered"), split the 3-letter country test per field, implementer lists `xfail` bugs in the PR (it can't open issues) | §3: 5 of 11 planned tests already existed; `test_same_high_risk_country_on_both_sides_counts_once` reused an **existing name** in the same module, which would silently replace the original. My issue draft caused part of it; the planner (read + search) didn't check either |
 | 5 | #29 / PR #32 | PR review | `@copilot` comment: add the CI run link + pytest output from the plan's *Evidence to attach* | PR description had neither; `implementer.agent.md` only knows the old six sections, so *Evidence to attach* isn't enforced |
 
@@ -69,10 +69,10 @@ Agent-task form fields: Context · Inputs · Expected output · Acceptance crite
 - **Title:** `[agent] Move screening rule definitions into app/rules.py`
 - **Context:** `app/screening.py` mixes rule definitions (thresholds, `RULES`, scores) with the matching logic, so a threshold change and a logic change land in the same file and review.
 - **Inputs:** `app/screening.py`, `tests/test_screening.py`.
-- **Expected output:** `HIGH_RISK_COUNTRIES`, `LARGE_AMOUNT`, `ROUND_AMOUNT_STEP`, `NAME_MATCH_THRESHOLD`, `REVIEW_THRESHOLD`, `RULES` move **unchanged** to `app/rules.py`; `app/screening.py` imports them. Pure move: no value, score or behaviour changes.
+- **Expected output:** `HIGH_RISK_COUNTRIES`, `LARGE_AMOUNT`, `ROUND_AMOUNT_STEP`, `NAME_MATCH_THRESHOLD`, `RISK_SCORE_REVIEW_THRESHOLD`, `RULES` move **unchanged** to `app/rules.py`; `app/screening.py` imports them. Pure move: no value, score or behaviour changes.
 - **Acceptance criteria:** every constant has the same value; all existing tests pass unmodified; `screen()` signature unchanged; no other callers change.
 - **Out of scope:** changing any threshold, score or rule; renaming rules; `infra/`; `.github/`.
-- **Test expectations:** a new test asserting `app.rules` exposes the same rule ids/scores as before (`WATCHLIST_NAME 70`, `HIGH_RISK_COUNTRY 40`, `LARGE_AMOUNT 20`, `ROUND_AMOUNT 10`) and `REVIEW_THRESHOLD == 50`.
+- **Test expectations:** a new test asserting `app.rules` exposes the same rule ids/scores as before (`WATCHLIST_NAME 70`, `HIGH_RISK_COUNTRY 40`, `LARGE_AMOUNT 20`, `ROUND_AMOUNT 10`) and `RISK_SCORE_REVIEW_THRESHOLD == 50`.
 - ⚠️ Checklist §4: touches screening rules in `app/screening.py` → **Escalate**. *Risks* must say decisions don't change and how that's proven (same tests, same scores). Solo repo: note how you handled the second reviewer.
 </details>
 
