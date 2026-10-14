@@ -26,4 +26,5 @@ uv run uvicorn app.main:app --reload
 
 - Never touch `infra/`. It is human-only.
 - Synthetic data only.
+- Read `docs/decisions/` before changing behaviour; never contradict an Accepted ADR without a new ADR.
 - See `.github/copilot-instructions.md` for coding standards and `.github/instructions/` for path-specific rules.

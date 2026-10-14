@@ -2,4 +2,5 @@
 /.github/          @sheriffMoose
 /infra/            @sheriffMoose
 /app/screening.py  @sheriffMoose
+/app/rules.py      @sheriffMoose
 CODEOWNERS         @sheriffMoose
