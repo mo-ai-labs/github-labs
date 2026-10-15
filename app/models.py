@@ -55,11 +55,14 @@ class AlertEventType(StrEnum):
     ASSIGNED = "assigned"
     NOTE_ADDED = "note_added"
     CLOSED = "closed"
+    DISPOSITION_CHANGED = "disposition_changed"
 
 
 class AlertHistoryEvent(BaseModel):
     type: AlertEventType
     actor: str | None = None
+    from_disposition: Disposition | None = None
+    to_disposition: Disposition | None = None
     timestamp: datetime
 
 
@@ -95,6 +98,12 @@ class AssignIn(BaseModel):
 
 class CloseAlertIn(BaseModel):
     disposition: Disposition
+    reason: str = Field(min_length=1, max_length=500)
+
+
+class DispositionChangeIn(BaseModel):
+    disposition: Disposition
+    reviewer: str = Field(min_length=1)
     reason: str = Field(min_length=1, max_length=500)
 
 

@@ -41,7 +41,22 @@ Source: [Trace commits to session logs](https://docs.github.com/en/copilot/how-t
 
 ## Setup (Mission 2 — One big task, three slices)
 
+- Issue [#81](https://github.com/mosherif-labs/github-labs/issues/81): **Disposition override**, a QA reviewer changes a closed alert's disposition, audited
+  - Changed from the plan's "disposition model + endpoint" because `app/` already had `Disposition`, `POST /alerts/{id}/close` and `/history`
+- Branch `feat/81-disposition`, draft PR [#82](https://github.com/mosherif-labs/github-labs/pull/82)
+- Progress file: `plans/81-progress.md` (Done / Decided / Next)
+- `AGENTS.md` rule: read the progress file before working on an issue; update Done / Decided / Next at the end
+- Slices: **S1** model (VS Code agent) · **S2** `PATCH /alerts/{id}/disposition` + validation (Copilot CLI) · **S3** audit trail + tests (cloud agent via `@copilot` on PR #82)
+
 ## Session 1 — VS Code agent (Mission 3)
+
+- Prompt: *"Work on S1 of `plans/81-progress.md` only."* (deliberately no "update the file": the `AGENTS.md` rule had to do that)
+- Read `plans/81-progress.md` **first**, before touching code ✅
+- Stayed in scope: only `app/models.py` + `tests/test_alerts.py` (no endpoint) ✅; tests green
+- Added `DispositionChangeIn` (disposition, reviewer, reason), `AlertEventType.DISPOSITION_CHANGED`, optional `from_disposition` / `to_disposition` on `AlertHistoryEvent`
+- File updated: Done = S1 · Decided = *from/to optional because `AlertHistoryEvent` serves many event types* · Next starts at S2
+- 🔍 Gap to watch: issue wants the audit event to carry **reason**, but `AlertHistoryEvent` has no `reason` field yet. A later session must add it (not a reversal, but Done doesn't flag it)
+- Done entry has no commit sha (the template asked for one): the agent can't know a sha before the commit exists
 
 ## Lessons (Mission 4 — How the CLI resumes)
 

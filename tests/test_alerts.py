@@ -1,9 +1,42 @@
 from datetime import UTC, datetime
 
+import pytest
+from pydantic import ValidationError
+
+from app.models import AlertEventType, AlertHistoryEvent, Disposition, DispositionChangeIn
 from tests.conftest import make_txn
 
 
 CLOSE_BODY = {"disposition": "false_positive", "reason": "Name-only match, different entity"}
+
+
+def test_disposition_change_input_accepts_valid_values():
+    body = DispositionChangeIn(
+        disposition="true_positive",
+        reviewer="qa-reviewer",
+        reason="Additional evidence confirms the match",
+    )
+
+    assert body.disposition is Disposition.TRUE_POSITIVE
+    assert body.reviewer == "qa-reviewer"
+
+
+def test_disposition_change_input_rejects_missing_reviewer():
+    with pytest.raises(ValidationError):
+        DispositionChangeIn(disposition="true_positive", reason="Reviewed")
+
+
+def test_disposition_change_history_event_serializes_from_and_to():
+    event = AlertHistoryEvent(
+        type=AlertEventType.DISPOSITION_CHANGED,
+        actor="qa-reviewer",
+        from_disposition=Disposition.FALSE_POSITIVE,
+        to_disposition=Disposition.TRUE_POSITIVE,
+        timestamp=datetime.now(UTC),
+    )
+
+    assert event.model_dump(mode="json")["from_disposition"] == "false_positive"
+    assert event.model_dump(mode="json")["to_disposition"] == "true_positive"
 
 
 def test_list_alerts(client, alert_id):
