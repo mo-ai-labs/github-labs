@@ -240,3 +240,54 @@ def test_closed_alert_cannot_be_closed_or_assigned(client, alert_id):
 def test_close_rejects_unknown_disposition(client, alert_id):
     response = client.post(f"/alerts/{alert_id}/close", json={"disposition": "maybe", "reason": "x"})
     assert response.status_code == 422
+
+
+def test_change_disposition_updates_closed_alert(client, alert_id):
+    client.post(f"/alerts/{alert_id}/close", json=CLOSE_BODY)
+
+    response = client.patch(
+        f"/alerts/{alert_id}/disposition",
+        json={"disposition": "true_positive", "reviewer": "qa-reviewer", "reason": "New evidence"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["disposition"] == "true_positive"
+
+
+def test_change_disposition_on_open_alert_conflicts(client, alert_id):
+    response = client.patch(
+        f"/alerts/{alert_id}/disposition",
+        json={"disposition": "true_positive", "reviewer": "qa-reviewer", "reason": "New evidence"},
+    )
+
+    assert response.status_code == 409
+
+
+def test_change_disposition_to_same_value_conflicts(client, alert_id):
+    client.post(f"/alerts/{alert_id}/close", json=CLOSE_BODY)
+
+    response = client.patch(
+        f"/alerts/{alert_id}/disposition",
+        json={"disposition": "false_positive", "reviewer": "qa-reviewer", "reason": "Same"},
+    )
+
+    assert response.status_code == 409
+
+
+def test_change_disposition_unknown_alert_returns_404(client):
+    response = client.patch(
+        "/alerts/missing/disposition",
+        json={"disposition": "true_positive", "reviewer": "qa-reviewer", "reason": "x"},
+    )
+
+    assert response.status_code == 404
+
+
+def test_change_disposition_requires_reviewer(client, alert_id):
+    client.post(f"/alerts/{alert_id}/close", json=CLOSE_BODY)
+
+    response = client.patch(
+        f"/alerts/{alert_id}/disposition", json={"disposition": "true_positive", "reason": "x"}
+    )
+
+    assert response.status_code == 422

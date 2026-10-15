@@ -33,6 +33,7 @@ CI (`.github/workflows/ci.yml`, job `test`) runs the same suite on every pull re
 | POST | `/alerts/{id}/assign` | Assign an open alert to an analyst |
 | POST | `/alerts/{id}/notes` | Add a note to an alert |
 | POST | `/alerts/{id}/close` | Close an alert with a disposition |
+| PATCH | `/alerts/{id}/disposition` | Change the disposition of a closed alert |
 | GET | `/watchlist` | List watchlist entries |
 | POST | `/watchlist` | Add a watchlist entry |
 | DELETE | `/watchlist/{id}` | Remove a watchlist entry |

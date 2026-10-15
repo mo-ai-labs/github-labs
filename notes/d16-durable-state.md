@@ -60,6 +60,12 @@ Source: [Trace commits to session logs](https://docs.github.com/en/copilot/how-t
 
 ## Lessons (Mission 4 — How the CLI resumes)
 
+Source: [Resume an interactive session](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/overview#resume-an-interactive-session)
+
+- `--resume` (launch option) or `/resume` (slash command): **pick** a past interactive session and continue with its saved context
+- `copilot --continue`: no picker, reopens the **most recently closed local** session
+- The CLI can also pull a cloud agent session started on GitHub into your local environment
+
 ## Session 2 — Copilot CLI (Mission 5)
 
 ## Session 3 — Cloud agent (Mission 6)
