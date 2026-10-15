@@ -13,3 +13,8 @@ Issue: https://github.com/mosherif-labs/github-labs/issues/81
 
 ## Next
 - None; S1–S3 are complete.
+
+## Audit
+- Repeats: 0. Reversals: 0 (S3 `7a01a20` kept S1's model, S2's endpoint and the unrecorded 409 for a no-op change).
+- Drift: the issue's `reason` never reached the history event; S2's Next line dropped it and S3 locked it in ("no additional history fields are needed").
+- Format fix: add an **Acceptance** section copied from the issue; every session ticks items there and never edits them.

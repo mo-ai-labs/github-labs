@@ -7,7 +7,7 @@
 ## Bets
 
 - **Bet A** — How many steps/decisions from S1–S2 will S3 repeat or reverse, even with the progress file? **My guess: 1**
-  - Result: _scored in Mission 7_
+  - Result: **Miss** (exact needed): actual **0 repeats + 0 reversals**. S3 (`7a01a20`) kept the unrecorded 409, didn't touch S1's model or S2's endpoint. But it **locked in a drift**: the issue's `reason` never reached the audit event, and S3 wrote *"no additional history fields are needed"* into Decided. Zero repeats ≠ correct result
 - **Bet B** — At roughly what % of the token limit does Copilot CLI auto-compress history? **My guess: 50%**
   - Result: **Miss**: actual **~80%**: Copilot *"starts compressing your history in the background when your conversation approaches 80%"* of the token limit. If static context (system messages, tool definitions) already fills ~75%+, it waits until ~90%; if usage hits ~95% before background compaction finishes, it blocks until done ([Context management](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/overview#context-management))
 
@@ -106,4 +106,24 @@ Run:
 
 ## Audit (Mission 7)
 
+`git log -p --follow -- plans/81-progress.md` → 4 versions: `4fac9a5` (template) · `b5b4a93` S1 · `d4ce506` + `3be9d7c` S2 · `7a01a20` S3 (`copilot-swe-agent[bot]`)
+
+| Check | S3 result |
+|---|---|
+| Repeats (redid Done) | **0**: model and endpoint untouched; only added the history append + 1 test |
+| Reversals (undid Decided / S1–S2 choice) | **0**: kept from/to optional; kept the **unrecorded** 409 for a no-op change |
+| Drift | ⚠️ `reason` (in the issue) was never stored on the history event. S1 left it out, S2's Next dropped it, S3 **made it official** in Decided: *"no additional history fields are needed"* |
+
+- Bet A guess 1 → actual 0 (miss). The real failure wasn't a repeat or reversal: it was a requirement that silently fell out of **Next**
+- The file did its job for *Done* (no repeats) and *Decided* (no reversals, even of an unrecorded choice). It can't protect what never got written into it
+- In AML terms: an override audit event with no **reason** is an examiner finding: who changed it is recorded, but not why
+- **My format fix:** add an **Acceptance** section copied from the issue; sessions tick it, never edit it (written to `plans/81-progress.md` → Audit)
+
 ## Reflection
+
+- **Which field did the most work to stop repeats?** **Done**: S3 saw S1 and S2 listed and didn't redo the model or endpoint. (Decided is what stopped reversals.)
+- **Making Decided defensible to an examiner:**
+  - Each entry: **who** (human, or agent + session-log link), **when**, **why**
+  - Decided changes land only through a **reviewed PR** (CODEOWNERS on `plans/`)
+  - **Append-only**: supersede with a new entry, never edit; git history is the trail
+  - Each decision **traces to an acceptance criterion** in the issue. That's the one that would have caught the dropped `reason`
