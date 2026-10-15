@@ -1,9 +1,42 @@
 from datetime import UTC, datetime
 
+import pytest
+from pydantic import ValidationError
+
+from app.models import AlertEventType, AlertHistoryEvent, Disposition, DispositionChangeIn
 from tests.conftest import make_txn
 
 
 CLOSE_BODY = {"disposition": "false_positive", "reason": "Name-only match, different entity"}
+
+
+def test_disposition_change_input_accepts_valid_values():
+    body = DispositionChangeIn(
+        disposition="true_positive",
+        reviewer="qa-reviewer",
+        reason="Additional evidence confirms the match",
+    )
+
+    assert body.disposition is Disposition.TRUE_POSITIVE
+    assert body.reviewer == "qa-reviewer"
+
+
+def test_disposition_change_input_rejects_missing_reviewer():
+    with pytest.raises(ValidationError):
+        DispositionChangeIn(disposition="true_positive", reason="Reviewed")
+
+
+def test_disposition_change_history_event_serializes_from_and_to():
+    event = AlertHistoryEvent(
+        type=AlertEventType.DISPOSITION_CHANGED,
+        actor="qa-reviewer",
+        from_disposition=Disposition.FALSE_POSITIVE,
+        to_disposition=Disposition.TRUE_POSITIVE,
+        timestamp=datetime.now(UTC),
+    )
+
+    assert event.model_dump(mode="json")["from_disposition"] == "false_positive"
+    assert event.model_dump(mode="json")["to_disposition"] == "true_positive"
 
 
 def test_list_alerts(client, alert_id):
@@ -206,4 +239,61 @@ def test_closed_alert_cannot_be_closed_or_assigned(client, alert_id):
 
 def test_close_rejects_unknown_disposition(client, alert_id):
     response = client.post(f"/alerts/{alert_id}/close", json={"disposition": "maybe", "reason": "x"})
+    assert response.status_code == 422
+
+
+def test_change_disposition_updates_closed_alert(client, alert_id):
+    client.post(f"/alerts/{alert_id}/close", json=CLOSE_BODY)
+
+    response = client.patch(
+        f"/alerts/{alert_id}/disposition",
+        json={"disposition": "true_positive", "reviewer": "qa-reviewer", "reason": "New evidence"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["disposition"] == "true_positive"
+    event = client.get(f"/alerts/{alert_id}/history").json()[-1]
+    assert event["type"] == "disposition_changed"
+    assert event["actor"] == "qa-reviewer"
+    assert event["from_disposition"] == "false_positive"
+    assert event["to_disposition"] == "true_positive"
+    assert event["timestamp"]
+
+
+def test_change_disposition_on_open_alert_conflicts(client, alert_id):
+    response = client.patch(
+        f"/alerts/{alert_id}/disposition",
+        json={"disposition": "true_positive", "reviewer": "qa-reviewer", "reason": "New evidence"},
+    )
+
+    assert response.status_code == 409
+
+
+def test_change_disposition_to_same_value_conflicts(client, alert_id):
+    client.post(f"/alerts/{alert_id}/close", json=CLOSE_BODY)
+
+    response = client.patch(
+        f"/alerts/{alert_id}/disposition",
+        json={"disposition": "false_positive", "reviewer": "qa-reviewer", "reason": "Same"},
+    )
+
+    assert response.status_code == 409
+
+
+def test_change_disposition_unknown_alert_returns_404(client):
+    response = client.patch(
+        "/alerts/missing/disposition",
+        json={"disposition": "true_positive", "reviewer": "qa-reviewer", "reason": "x"},
+    )
+
+    assert response.status_code == 404
+
+
+def test_change_disposition_requires_reviewer(client, alert_id):
+    client.post(f"/alerts/{alert_id}/close", json=CLOSE_BODY)
+
+    response = client.patch(
+        f"/alerts/{alert_id}/disposition", json={"disposition": "true_positive", "reason": "x"}
+    )
+
     assert response.status_code == 422

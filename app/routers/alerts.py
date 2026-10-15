@@ -10,6 +10,7 @@ from app.models import (
     AlertStatus,
     AssignIn,
     CloseAlertIn,
+    DispositionChangeIn,
     Note,
     NoteIn,
 )
@@ -105,5 +106,27 @@ def close_alert(alert_id: str, body: CloseAlertIn, store: StoreDep) -> Alert:
         alert.closed_at = datetime.now(UTC)
         store.alert_history[alert_id].append(
             AlertHistoryEvent(type=AlertEventType.CLOSED, timestamp=alert.closed_at)
+        )
+    return alert
+
+
+@router.patch("/{alert_id}/disposition", response_model=Alert)
+def change_disposition(alert_id: str, body: DispositionChangeIn, store: StoreDep) -> Alert:
+    with store.lock:
+        alert = _get_alert(store, alert_id)
+        if alert.status is not AlertStatus.CLOSED:
+            raise HTTPException(status.HTTP_409_CONFLICT, "Only closed alerts can change disposition")
+        if alert.disposition is body.disposition:
+            raise HTTPException(status.HTTP_409_CONFLICT, "Alert already has this disposition")
+        previous_disposition = alert.disposition
+        alert.disposition = body.disposition
+        store.alert_history[alert_id].append(
+            AlertHistoryEvent(
+                type=AlertEventType.DISPOSITION_CHANGED,
+                actor=body.reviewer,
+                from_disposition=previous_disposition,
+                to_disposition=body.disposition,
+                timestamp=datetime.now(UTC),
+            )
         )
     return alert

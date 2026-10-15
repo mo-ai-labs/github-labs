@@ -1873,7 +1873,7 @@ echo "$INPUT" | jq -c '{ts: .timestamp, tool: .toolName, args: .toolArgs}' >> lo
 exit 0
 ```
 - `chmod +x` + `git update-index --chmod=+x`, add `logs/` to `.gitignore`.
-- Ship it through a PR → green checks → `gh pr merge --admin`: **hooks only count once on `main`**.
+- Ship it through a PR → green checks → `gh pr merge --admin --merge --delete-branch`: **hooks only count once on `main`**.
 - It's an observer: if it fails (disk full, `jq` missing) the run **continues**, so a missing log is silent. Check the artifact, don't assume it.
 
 ## Mission 5: safe execution paths, by the book
