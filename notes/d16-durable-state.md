@@ -9,7 +9,7 @@
 - **Bet A** — How many steps/decisions from S1–S2 will S3 repeat or reverse, even with the progress file? **My guess: 1**
   - Result: _scored in Mission 7_
 - **Bet B** — At roughly what % of the token limit does Copilot CLI auto-compress history? **My guess: 50%**
-  - Result: _scored in Mission 4_
+  - Result: **Miss**: actual **~80%**: Copilot *"starts compressing your history in the background when your conversation approaches 80%"* of the token limit. If static context (system messages, tool definitions) already fills ~75%+, it waits until ~90%; if usage hits ~95% before background compaction finishes, it blocks until done ([Context management](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/overview#context-management))
 
 ## Lessons (Mission 1 — Progress and decisions as artifacts)
 
@@ -66,9 +66,43 @@ Source: [Resume an interactive session](https://docs.github.com/en/copilot/how-t
 - `copilot --continue`: no picker, reopens the **most recently closed local** session
 - The CLI can also pull a cloud agent session started on GitHub into your local environment
 
+Source: [Context management](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/overview#context-management)
+
+- `/context` = visual overview of token usage · `/compact` = manually compress history · `/usage` = session stats (AI credits, duration, lines edited, tokens per model)
+- Auto-compression: background, at **~80%** of the token limit → **~90%** if static context is already ~75%+ → at **~95%** it blocks until compaction finishes
+
+**Twist: why not just `--resume`?** `--resume` / `--continue` restore a **local CLI** session only. S1 ran in VS Code, S3 runs in the cloud. The only thing all three surfaces can read is the **repo**, so S2 starts **fresh** from the progress file on purpose.
+
 ## Session 2 — Copilot CLI (Mission 5)
 
+- Fresh `copilot` session from the progress file (no `--resume`); commit `d4ce506`
+- Added `PATCH /alerts/{id}/disposition`: 404 unknown · 409 if alert not closed · **409** if disposition unchanged · 422 via `DispositionChangeIn`; endpoint tests + README row
+- Decided unchanged ✅ · stayed in S2 ✅ · Done honestly says *"no history event yet"*
+- `/context` midway: **under 25%** of the token limit (far from the ~80% auto-compression point)
+- ⚠️ Commit message kept the literal `<issue>` placeholder
+- 🔍 **Unrecorded decision**: 409 (not 422) for a no-op change was chosen in code but **not written to Decided**, so nothing tells S3 it's intentional
+- 🔍 **Drift**: Next for S3 says *"reviewer, from/to"*; the issue's **reason** dropped out
+- ⚠️ Risk-check slip: I said the risk was *S3 redoes the endpoint*. Wrong: the endpoint is in **Done**, which guards against repeats. The real risk is a **reversal**: an unrecorded choice looks like a bug, and **Decided** is the only thing that guards choices. Rule: *Done stops repeats, Decided stops reversals*
+
 ## Session 3 — Cloud agent (Mission 6)
+
+Sources: [Asking Copilot to make changes](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github#asking-copilot-to-make-changes) · [Using comments to iterate on a pull request](https://docs.github.com/en/copilot/tutorials/cloud-agent/get-the-best-results#using-comments-to-iterate-on-a-pull-request)
+
+- `@copilot` works on **any** PR, including ones you opened yourself; only comments from people with **write access** trigger it
+- By default it pushes commits **directly to the PR's branch** (ask in the comment for a separate PR instead)
+- Batch feedback with **Start a review** so Copilot works on the whole review at once, not comment by comment
+
+Run:
+- Comment on PR [#82](https://github.com/mosherif-labs/github-labs/pull/82): *"@copilot Read `plans/81-progress.md` and do S3 only. Don't repeat Done or reverse Decided."* (progress file left **unpatched** on purpose: the 409 choice and `reason` drift were not fixed before S3)
+- Setup ran first (`setup-uv`, custom setup steps, tests once, MCP servers), then *"Inspect recent commits and issue plans"*, then it viewed `tests.instructions.md`, `copilot-instructions.md`, **`plans/81-progress.md`**, `AGENTS.md`, `docs/decisions` before writing code
+- Session title came from the PR title (*"Working on progress file and AGENTS.md rule"*, the first commit's headline via `gh pr create --fill`)
+
+![S3 session log: reads the progress file before coding](./img/d16-s3-log-reads-progress.png)
+
+- ❌ **Attempt 1 changed nothing.** It ran ~1 min, read the file, then replied: *"Read `plans/81-progress.md`. It records S1 and S2 as done … S3 … as next; no changes were requested in the comment."* No commits
+  - The comment rendered as `plans/-progress.md`: the literal `<issue>` placeholder was eaten by Markdown as an HTML tag (same placeholder slip as the S2 commit message)
+  - It read the request as *"look at the file"*, not *"make changes"*. Lesson: the progress file says **what** to do, but the trigger comment must clearly say **do it and push**. Durable state doesn't replace a clear instruction
+- My `/context` + notes commit wasn't pushed before S3 either, so the agent saw the pre-`/context` progress file (no effect on S3's content)
 
 ## Audit (Mission 7)
 
