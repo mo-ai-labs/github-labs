@@ -118,5 +118,15 @@ def change_disposition(alert_id: str, body: DispositionChangeIn, store: StoreDep
             raise HTTPException(status.HTTP_409_CONFLICT, "Only closed alerts can change disposition")
         if alert.disposition is body.disposition:
             raise HTTPException(status.HTTP_409_CONFLICT, "Alert already has this disposition")
+        previous_disposition = alert.disposition
         alert.disposition = body.disposition
+        store.alert_history[alert_id].append(
+            AlertHistoryEvent(
+                type=AlertEventType.DISPOSITION_CHANGED,
+                actor=body.reviewer,
+                from_disposition=previous_disposition,
+                to_disposition=body.disposition,
+                timestamp=datetime.now(UTC),
+            )
+        )
     return alert

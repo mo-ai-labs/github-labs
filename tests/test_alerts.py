@@ -252,6 +252,12 @@ def test_change_disposition_updates_closed_alert(client, alert_id):
 
     assert response.status_code == 200
     assert response.json()["disposition"] == "true_positive"
+    event = client.get(f"/alerts/{alert_id}/history").json()[-1]
+    assert event["type"] == "disposition_changed"
+    assert event["actor"] == "qa-reviewer"
+    assert event["from_disposition"] == "false_positive"
+    assert event["to_disposition"] == "true_positive"
+    assert event["timestamp"]
 
 
 def test_change_disposition_on_open_alert_conflicts(client, alert_id):
