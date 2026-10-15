@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from app.store import Store
@@ -16,7 +17,20 @@ def test_screen_clean_transaction_creates_no_alert(client, store):
     body = response.json()
     assert body["decision"] == "clear"
     assert body["alert_id"] is None
+    assert body["transaction"]["purpose_code"] is None
     assert store.alerts == {}
+
+
+def test_screen_accepts_purpose_code(client):
+    response = client.post("/transactions/screen", json=make_txn(purpose_code="SALA"))
+    assert response.status_code == 201
+    assert response.json()["transaction"]["purpose_code"] == "SALA"
+
+
+@pytest.mark.parametrize("purpose_code", ["salA", "SAL", "SALAA", "SA1A"])
+def test_screen_rejects_malformed_purpose_code(client, purpose_code):
+    response = client.post("/transactions/screen", json=make_txn(purpose_code=purpose_code))
+    assert response.status_code == 422
 
 
 def test_screen_suspicious_transaction_opens_alert(client):

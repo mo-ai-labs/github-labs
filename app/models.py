@@ -9,6 +9,7 @@ class TransactionIn(BaseModel):
     reference: str = Field(min_length=1, max_length=64, pattern=r"\S", examples=["TXN-0001"])
     amount: Decimal = Field(gt=0, decimal_places=2, examples=[8200])
     currency: str = Field(pattern=r"^[A-Z]{3}$", examples=["EUR"])
+    purpose_code: str | None = Field(default=None, pattern=r"^[A-Z]{4}$", examples=["SALA"])
     originator_name: str = Field(min_length=1, pattern=r"\S", examples=["Jane Example"])
     originator_country: str = Field(pattern=r"^[A-Z]{2}$", examples=["NL"])
     beneficiary_name: str = Field(min_length=1, pattern=r"\S", examples=["Globex Front LLC"])
