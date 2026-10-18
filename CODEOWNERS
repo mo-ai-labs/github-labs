@@ -4,3 +4,5 @@
 /app/screening.py  @sheriffMoose
 /app/rules.py      @sheriffMoose
 CODEOWNERS         @sheriffMoose
+# Instruction files are rules: review every change
+/AGENTS.md         @sheriffMoose
