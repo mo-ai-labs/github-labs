@@ -1,0 +1,524 @@
+{
+ "type": "excalidraw",
+ "version": 2,
+ "source": "claude",
+ "elements": [
+  {
+   "id": "a",
+   "type": "rectangle",
+   "x": 40,
+   "y": 40,
+   "width": 220,
+   "height": 60,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "#ffffff",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "at"
+    }
+   ]
+  },
+  {
+   "id": "at",
+   "type": "text",
+   "x": 50,
+   "y": 50.0,
+   "width": 200,
+   "height": 40,
+   "text": "PR opened / pushed /\nedited / labeled",
+   "fontSize": 16,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "a",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "b",
+   "type": "diamond",
+   "x": 50,
+   "y": 150,
+   "width": 200,
+   "height": 90,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "#fff3bf",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "bt"
+    }
+   ]
+  },
+  {
+   "id": "bt",
+   "type": "text",
+   "x": 60,
+   "y": 175.0,
+   "width": 180,
+   "height": 40,
+   "text": "Author Copilot\nor label 'agent'?",
+   "fontSize": 16,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "b",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "c",
+   "type": "rectangle",
+   "x": 340,
+   "y": 165,
+   "width": 220,
+   "height": 60,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "#d3f9d8",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "ct"
+    }
+   ]
+  },
+  {
+   "id": "ct",
+   "type": "text",
+   "x": 350,
+   "y": 175.0,
+   "width": 200,
+   "height": 40,
+   "text": "Human PR: echo step\n\u2192 check passes",
+   "fontSize": 16,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "c",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "d",
+   "type": "rectangle",
+   "x": 40,
+   "y": 300,
+   "width": 220,
+   "height": 70,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "#d0ebff",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "dt"
+    }
+   ]
+  },
+  {
+   "id": "dt",
+   "type": "text",
+   "x": 50,
+   "y": 315.0,
+   "width": 200,
+   "height": 40,
+   "text": "Checkout base.sha\n(plan + checker from main)",
+   "fontSize": 16,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "d",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "e",
+   "type": "rectangle",
+   "x": 20,
+   "y": 420,
+   "width": 260,
+   "height": 70,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "#ffffff",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "et"
+    }
+   ]
+  },
+  {
+   "id": "et",
+   "type": "text",
+   "x": 30,
+   "y": 435.0,
+   "width": 240,
+   "height": 40,
+   "text": "Plan = 'Plan:' in body\nor notes/plans/<closing issue>.md",
+   "fontSize": 16,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "e",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "f",
+   "type": "rectangle",
+   "x": 40,
+   "y": 540,
+   "width": 220,
+   "height": 70,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "#ffffff",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "ft"
+    }
+   ]
+  },
+  {
+   "id": "ft",
+   "type": "text",
+   "x": 50,
+   "y": 555.0,
+   "width": 200,
+   "height": 40,
+   "text": "gh pr diff --name-only\nvs '## Files to change'",
+   "fontSize": 16,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "f",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "g",
+   "type": "rectangle",
+   "x": 340,
+   "y": 500,
+   "width": 220,
+   "height": 60,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "#d3f9d8",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "gt"
+    }
+   ]
+  },
+  {
+   "id": "gt",
+   "type": "text",
+   "x": 350,
+   "y": 510.0,
+   "width": 200,
+   "height": 40,
+   "text": "All inside plan\n\u2192 green",
+   "fontSize": 16,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "g",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "h",
+   "type": "rectangle",
+   "x": 340,
+   "y": 590,
+   "width": 220,
+   "height": 70,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "#ffc9c9",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "ht"
+    }
+   ]
+  },
+  {
+   "id": "ht",
+   "type": "text",
+   "x": 350,
+   "y": 605.0,
+   "width": 200,
+   "height": 40,
+   "text": "Any file outside / no plan\n\u2192 ::error file=\u2026 \u2192 red",
+   "fontSize": 16,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "h",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "x1",
+   "type": "arrow",
+   "x": 150,
+   "y": 100,
+   "width": 0,
+   "height": 50,
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     50
+    ]
+   ],
+   "strokeColor": "#1e1e1e",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "endArrowhead": "arrow",
+   "boundElements": []
+  },
+  {
+   "id": "x2",
+   "type": "arrow",
+   "x": 250,
+   "y": 195,
+   "width": 90,
+   "height": 0,
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     90,
+     0
+    ]
+   ],
+   "strokeColor": "#1e1e1e",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "endArrowhead": "arrow",
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "x2t"
+    }
+   ]
+  },
+  {
+   "id": "x2t",
+   "type": "text",
+   "x": 295.0,
+   "y": 195.0,
+   "width": 60,
+   "height": 20,
+   "text": "no",
+   "fontSize": 14,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "x2",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "x3",
+   "type": "arrow",
+   "x": 150,
+   "y": 240,
+   "width": 0,
+   "height": 60,
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     60
+    ]
+   ],
+   "strokeColor": "#1e1e1e",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "endArrowhead": "arrow",
+   "boundElements": [
+    {
+     "type": "text",
+     "id": "x3t"
+    }
+   ]
+  },
+  {
+   "id": "x3t",
+   "type": "text",
+   "x": 150.0,
+   "y": 270.0,
+   "width": 60,
+   "height": 20,
+   "text": "yes",
+   "fontSize": 14,
+   "fontFamily": 2,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "x3",
+   "strokeColor": "#1e1e1e",
+   "opacity": 100
+  },
+  {
+   "id": "x4",
+   "type": "arrow",
+   "x": 150,
+   "y": 370,
+   "width": 0,
+   "height": 50,
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     50
+    ]
+   ],
+   "strokeColor": "#1e1e1e",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "endArrowhead": "arrow",
+   "boundElements": []
+  },
+  {
+   "id": "x5",
+   "type": "arrow",
+   "x": 150,
+   "y": 490,
+   "width": 0,
+   "height": 50,
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     50
+    ]
+   ],
+   "strokeColor": "#1e1e1e",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "endArrowhead": "arrow",
+   "boundElements": []
+  },
+  {
+   "id": "x6",
+   "type": "arrow",
+   "x": 260,
+   "y": 565,
+   "width": 80,
+   "height": -35,
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     80,
+     -35
+    ]
+   ],
+   "strokeColor": "#1e1e1e",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "endArrowhead": "arrow",
+   "boundElements": []
+  },
+  {
+   "id": "x7",
+   "type": "arrow",
+   "x": 260,
+   "y": 585,
+   "width": 80,
+   "height": 35,
+   "points": [
+    [
+     0,
+     0
+    ],
+    [
+     80,
+     35
+    ]
+   ],
+   "strokeColor": "#1e1e1e",
+   "strokeWidth": 2,
+   "roughness": 0,
+   "opacity": 100,
+   "endArrowhead": "arrow",
+   "boundElements": []
+  },
+  {
+   "id": "n",
+   "type": "text",
+   "x": 340,
+   "y": 300,
+   "width": 300,
+   "height": 90,
+   "text": "Copilot's pushes: run waits for\n'Approve and run workflows'\n(Bet B). Required check =\ncan't merge until it runs.",
+   "fontSize": 14,
+   "fontFamily": 2,
+   "textAlign": "left",
+   "verticalAlign": "top",
+   "strokeColor": "#e03131",
+   "opacity": 100
+  }
+ ],
+ "appState": {
+  "viewBackgroundColor": "#ffffff"
+ },
+ "files": {}
+}
