@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v7
         if: env.IS_AGENT == 'true'
         with:
-          ref: ${{ github.event.pull_request.base.sha }} # plan + checker come from main, not from the PR
+          ref: ${{ github.event.pull_request.base.ref }} # main's tip: base.sha is frozen at PR open and can predate the checker/plan
       - name: Diff must stay inside the approved plan
         if: env.IS_AGENT == 'true'
         env:
