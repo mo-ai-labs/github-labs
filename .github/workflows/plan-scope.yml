@@ -1,0 +1,31 @@
+name: plan-scope
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, labeled]
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+jobs:
+  plan-scope:
+    runs-on: ubuntu-latest
+    env:
+      IS_AGENT: ${{ github.event.pull_request.user.login == 'Copilot' || contains(github.event.pull_request.labels.*.name, 'agent') }}
+    steps:
+      - name: Human PR, nothing to check
+        if: env.IS_AGENT != 'true'
+        run: echo "plan-scope only checks agent PRs (author Copilot or label 'agent')"
+      - uses: actions/checkout@v7
+        if: env.IS_AGENT == 'true'
+        with:
+          ref: ${{ github.event.pull_request.base.sha }} # plan + checker come from main, not from the PR
+      - name: Diff must stay inside the approved plan
+        if: env.IS_AGENT == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          gh pr diff "$PR" --name-only -R "$GITHUB_REPOSITORY" > changed.txt
+          export ISSUE="$(gh pr view "$PR" -R "$GITHUB_REPOSITORY" --json closingIssuesReferences --jq '.closingIssuesReferences[0].number // empty')"
+          python3 scripts/check_plan_scope.py changed.txt
