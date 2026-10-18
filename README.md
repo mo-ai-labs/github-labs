@@ -56,3 +56,5 @@ A total score of 50 or more (capped at 100) means the decision is `review` and a
 - `tests/`: unit tests (pytest + FastAPI `TestClient`)
 - `.github/workflows/`: CI
 - `infra/`: reserved for humans; agents must not touch it
+
+<!-- d17 drift test -->
